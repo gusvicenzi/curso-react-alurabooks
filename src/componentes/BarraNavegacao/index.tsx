@@ -5,11 +5,21 @@ import ModalLoginUsuario from '../ModalLoginUsuario'
 import logo from './assets/logo.png'
 import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useObterToken } from '../../hooks/session'
 
 const BarraNavegacao = () => {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+
   const [isSignInModalOpened, setSignInIsModalOpened] = useState(false)
   const [isSignUpModalOpened, setSignUpIsModalOpened] = useState(false)
+
+  const token = useObterToken()
+
+  useEffect(() => {
+    setIsUserLoggedIn(!!token)
+    console.log(token)
+  }, [token])
 
   return (
     <nav className='ab-navbar'>
@@ -41,30 +51,43 @@ const BarraNavegacao = () => {
         </li>
       </ul>
       <ul className='acoes'>
-        <li>
-          <BotaoNavegacao
-            texto='Login'
-            textoAltSrc='Icone representando um usuário'
-            imagemSrc={usuario}
-            onClick={() => setSignInIsModalOpened(true)}
-          />
-        </li>
-        <li>
-          <BotaoNavegacao
-            texto='Cadastrar-se'
-            textoAltSrc='Icone representando um usuário'
-            imagemSrc={usuario}
-            onClick={() => setSignUpIsModalOpened(true)}
-          />
-          <ModalCadastroUsuario
-            isOpen={isSignUpModalOpened}
-            onClose={() => setSignUpIsModalOpened(false)}
-          />
-          <ModalLoginUsuario
-            isOpen={isSignInModalOpened}
-            onClose={() => setSignInIsModalOpened(false)}
-          />
-        </li>
+        {!isUserLoggedIn && (
+          <>
+            <li>
+              <BotaoNavegacao
+                texto='Login'
+                textoAltSrc='Icone representando um usuário'
+                imagemSrc={usuario}
+                onClick={() => setSignInIsModalOpened(true)}
+              />
+              <ModalLoginUsuario
+                isOpen={isSignInModalOpened}
+                onClose={() => setSignInIsModalOpened(false)}
+                onLogin={() => {
+                  setSignInIsModalOpened(false)
+                  setIsUserLoggedIn(true)
+                }}
+              />
+            </li>
+            <li>
+              <BotaoNavegacao
+                texto='Cadastrar-se'
+                textoAltSrc='Icone representando um usuário'
+                imagemSrc={usuario}
+                onClick={() => setSignUpIsModalOpened(true)}
+              />
+              <ModalCadastroUsuario
+                isOpen={isSignUpModalOpened}
+                onClose={() => setSignUpIsModalOpened(false)}
+              />
+            </li>
+          </>
+        )}
+        {isUserLoggedIn && (
+          <>
+            <Link to='/minha-conta/pedidos'>Minha conta</Link>
+          </>
+        )}
       </ul>
     </nav>
   )

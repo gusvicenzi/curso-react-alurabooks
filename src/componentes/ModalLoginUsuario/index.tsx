@@ -11,8 +11,9 @@ import { usePersistirToken } from '../../hooks/session'
 interface ModalProps {
   isOpen: boolean
   onClose: () => void
+  onLogin: () => void
 }
-const ModalCadastroUsuario = ({ onClose, isOpen }: ModalProps) => {
+const ModalCadastroUsuario = ({ onClose, isOpen, onLogin }: ModalProps) => {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const saveToken = usePersistirToken()
@@ -40,9 +41,7 @@ const ModalCadastroUsuario = ({ onClose, isOpen }: ModalProps) => {
       setEmail('')
       setSenha('')
 
-      onClose()
-
-      alert('Logado')
+      onLogin()
     } catch (error) {
       console.log(error)
 
