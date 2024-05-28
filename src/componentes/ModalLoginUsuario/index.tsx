@@ -6,7 +6,7 @@ import imagemPrincipal from './assets/login.png'
 import './ModalLoginUsuario.css'
 import axios from 'axios'
 import { ILoginResponse } from '../../interfaces/IUserSession'
-import { usePersistirToken } from '../../hooks/session'
+import { useSaveToken } from '../../hooks/session'
 
 interface ModalProps {
   isOpen: boolean
@@ -16,7 +16,7 @@ interface ModalProps {
 const ModalCadastroUsuario = ({ onClose, isOpen, onLogin }: ModalProps) => {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
-  const saveToken = usePersistirToken()
+  const saveToken = useSaveToken()
 
   const aoSubmeterFormular = async (
     evento: React.FormEvent<HTMLFormElement>

@@ -1,13 +1,13 @@
-export const usePersistirToken = () => {
+export const useSaveToken = () => {
   return (token: string) => {
     sessionStorage.setItem('token', token)
   }
 }
 
-export const useObterToken = () => {
+export const useGetToken = () => {
   return sessionStorage.getItem('token')
 }
 
-export const useLimparToken = () => {
+export const useClearToken = () => {
   sessionStorage.removeItem('token')
 }

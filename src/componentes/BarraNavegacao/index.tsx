@@ -6,7 +6,7 @@ import logo from './assets/logo.png'
 import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
 import { useEffect, useState } from 'react'
-import { useObterToken } from '../../hooks/session'
+import { useGetToken } from '../../hooks/session'
 
 const BarraNavegacao = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
@@ -14,7 +14,7 @@ const BarraNavegacao = () => {
   const [isSignInModalOpened, setSignInIsModalOpened] = useState(false)
   const [isSignUpModalOpened, setSignUpIsModalOpened] = useState(false)
 
-  const token = useObterToken()
+  const token = useGetToken()
 
   useEffect(() => {
     setIsUserLoggedIn(!!token)

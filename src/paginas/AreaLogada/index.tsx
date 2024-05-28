@@ -5,7 +5,7 @@ import './AreaLogada.css'
 const AreaLogada = () => {
   return (
     <>
-      <h1 className='AreaLogada_título'>Minha conta</h1>
+      <h1 className='AreaLogada__titulo'>Minha conta</h1>
       <section className='AreaLogada'>
         <div className='menu'>
           <ul className='navegacao'>

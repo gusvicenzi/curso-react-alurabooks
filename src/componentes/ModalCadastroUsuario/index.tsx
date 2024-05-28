@@ -4,8 +4,8 @@ import { useState } from 'react'
 import imagemPrincipal from './assets/login.png'
 
 import './ModalCadastroUsuario.css'
-import axios from 'axios'
-import { usePersistirToken } from '../../hooks/session'
+import axios, { AxiosError } from 'axios'
+import { useSaveToken } from '../../hooks/session'
 
 interface ModalProps {
   isOpen: boolean
@@ -19,7 +19,7 @@ const ModalCadastroUsuario = ({ onClose, isOpen }: ModalProps) => {
   const [cep, setCep] = useState('')
   const [senha, setSenha] = useState('')
   const [senhaConfirmada, setSenhaConfirmada] = useState('')
-  const saveToken = usePersistirToken()
+  const saveToken = useSaveToken()
 
   const aoSubmeterFormular = async (
     evento: React.FormEvent<HTMLFormElement>
@@ -70,6 +70,8 @@ const ModalCadastroUsuario = ({ onClose, isOpen }: ModalProps) => {
       console.log(error)
 
       const msg = 'Ocorreu um erro ao cadastrar o usuário: '
+      if (error instanceof AxiosError)
+        return alert(msg + error?.response?.data?.message)
       if (error instanceof Error) return alert(msg + error?.message)
       alert(msg)
     }
