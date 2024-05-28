@@ -18,7 +18,6 @@ const BarraNavegacao = () => {
 
   useEffect(() => {
     setIsUserLoggedIn(!!token)
-    console.log(token)
   }, [token])
 
   return (

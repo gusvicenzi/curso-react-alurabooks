@@ -4,8 +4,9 @@ import { useState } from 'react'
 import imagemPrincipal from './assets/login.png'
 
 import './ModalCadastroUsuario.css'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { useSaveToken } from '../../hooks/session'
+import { httpBackend } from '../../http'
 
 interface ModalProps {
   isOpen: boolean
@@ -47,10 +48,7 @@ const ModalCadastroUsuario = ({ onClose, isOpen }: ModalProps) => {
     }
     console.log(usuario)
     try {
-      const { data } = await axios.post(
-        'http://localhost:8000/public/registrar',
-        usuario
-      )
+      const { data } = await httpBackend.post('/public/registrar', usuario)
 
       console.log('retorno cadastro', data)
       saveToken(data.access_token)

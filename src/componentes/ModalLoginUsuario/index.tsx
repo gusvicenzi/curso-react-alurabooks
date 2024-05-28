@@ -4,9 +4,10 @@ import { useState } from 'react'
 import imagemPrincipal from './assets/login.png'
 
 import './ModalLoginUsuario.css'
-import axios from 'axios'
+import { isAxiosError } from 'axios'
 import { ILoginResponse } from '../../interfaces/IUserSession'
 import { useSaveToken } from '../../hooks/session'
+import { httpBackend } from '../../http'
 
 interface ModalProps {
   isOpen: boolean
@@ -30,8 +31,8 @@ const ModalCadastroUsuario = ({ onClose, isOpen, onLogin }: ModalProps) => {
     }
     console.log(usuario)
     try {
-      const { data } = await axios.post<ILoginResponse>(
-        'http://localhost:8000/public/login',
+      const { data } = await httpBackend.post<ILoginResponse>(
+        '/public/login',
         usuario
       )
 
@@ -46,7 +47,7 @@ const ModalCadastroUsuario = ({ onClose, isOpen, onLogin }: ModalProps) => {
       console.log(error)
 
       const msg = 'Ocorreu um erro ao entrar: '
-      if (axios.isAxiosError(error))
+      if (isAxiosError(error))
         return alert(msg + error?.response?.data?.message)
       alert('Ocorreu um erro inesperado!')
     }

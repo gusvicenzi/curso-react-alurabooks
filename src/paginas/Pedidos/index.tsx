@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import './Pedidos.css'
 import { AbBotao } from 'ds-alurabooks'
-import axios from 'axios'
 import { useGetToken } from '../../hooks/session'
 import { IPedido } from '../../interfaces/IPedido'
+import { httpBackend } from '../../http'
 
 export const Pedidos = () => {
   const [pedidos, setPedidos] = useState<IPedido[]>([])
@@ -12,11 +12,8 @@ export const Pedidos = () => {
 
   const getPedidos = async () => {
     try {
-      const { data: pedidoResponse } = await axios.get<IPedido[]>(
-        'http://localhost:8000/pedidos',
-        {
-          headers: { Authorization: `Bearer ${token} ` }
-        }
+      const { data: pedidoResponse } = await httpBackend.get<IPedido[]>(
+        '/pedidos'
       )
       setPedidos(pedidoResponse)
     } catch (error) {
@@ -26,12 +23,7 @@ export const Pedidos = () => {
 
   const excluirPedido = async (id: number) => {
     try {
-      const response = await axios.delete(
-        `http://localhost:8000/pedidos/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token} ` }
-        }
-      )
+      const response = await httpBackend.delete(`/pedidos/${id}`)
       if (response.status === 200) await getPedidos()
     } catch (error) {
       console.log(error)
