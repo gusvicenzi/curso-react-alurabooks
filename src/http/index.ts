@@ -60,3 +60,15 @@ export const getLivrosDestaque = async (
   const { data } = await httpBackend.get<ILivro[]>(`public/${list}`)
   return data
 }
+
+export const getLivrosPorCategoria = async (categoria: ICategoria) => {
+  try {
+    const { data } = await httpBackend.get<ILivro[]>('livros', {
+      params: { categoria: categoria.id }
+    })
+    return data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}

@@ -3,6 +3,7 @@ import { getCategoria } from '../../http'
 import { useParams } from 'react-router-dom'
 import { Loader } from '../../componentes/Loader'
 import { useQuery } from '@tanstack/react-query'
+import { ListaLivros } from '../../componentes/ListaLivros'
 
 export const Categoria = () => {
   const params = useParams()
@@ -11,15 +12,20 @@ export const Categoria = () => {
     queryKey: ['categoriaPorSlug', params.slug],
     queryFn: () => {
       if (params.slug) return getCategoria(params.slug)
-      throw new Error('No slug')
+      throw new Error('Nenhum slug')
     }
   })
 
-  if (isLoading) return <Loader />
+  if (isLoading && !categoria) return <Loader />
 
   return (
     <section>
-      {categoria?.nome && <TituloPrincipal texto={categoria?.nome ?? ''} />}
+      {categoria?.nome && (
+        <>
+          <TituloPrincipal texto={categoria.nome} />
+          <ListaLivros categoria={categoria} />
+        </>
+      )}
     </section>
   )
 }
