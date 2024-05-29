@@ -1,9 +1,13 @@
 import './Loader.css'
 
-export const Loader = () => {
+interface Props {
+  color?: string
+}
+
+export const Loader = ({ color }: Props) => {
   return (
     <div className='loader-container'>
-      <div className='lds-ellipsis'>
+      <div className='lds-ellipsis' style={{ color }}>
         <div></div>
         <div></div>
         <div></div>

@@ -1,53 +1,78 @@
-import { AbBotao, AbCard } from "ds-alurabooks"
-import { useState } from "react"
-import { ILivro } from "../../interfaces/ILivro"
+import { AbBotao, AbCard } from 'ds-alurabooks'
+import { useEffect, useState } from 'react'
+import { ILivro } from '../../interfaces/ILivro'
 
 import './LivrosDestaque.css'
+import { currencyFormat } from '../../utils/currencyFormat'
+import { Loader } from '../Loader'
 
 interface LivrosDestaqueProps {
-    livros: ILivro[]
+  livros: ILivro[]
 }
 
 const LivrosDestaque = ({ livros }: LivrosDestaqueProps) => {
+  const [livroSelecionado, setLivroSelecionado] = useState<ILivro>()
 
-    const [selecionado, selecionarLivro] = useState<ILivro>(livros[0])
+  useEffect(() => {
+    if (livros?.length) setLivroSelecionado(livros[0])
+  }, [livros])
 
-    return (<section className="LivrosDestaque">
+  return (
+    <section className='LivrosDestaque'>
+      {livros?.length ? (
         <div>
-            <ul className="livros">
-                {livros.map(livro => {
-                    return (
-                    <li 
-                        key={livro.nome}
-                        onClick={() => selecionarLivro(livro)} 
-                        className={selecionado?.nome === livro.nome ? 'selecionado' : ''}
-                    >
-                        <img src={livro.imagem} alt={`Capa do livro ${livro.nome} escrito por ${livro.autor}`} />
-                    </li>)
-                })}
-            </ul>
+          <ul className='livros'>
+            {livros?.map(livro => {
+              return (
+                <li
+                  key={livro.titulo}
+                  onClick={() => setLivroSelecionado(livro)}
+                  className={
+                    livroSelecionado?.titulo === livro.titulo
+                      ? 'selecionado'
+                      : ''
+                  }>
+                  <img
+                    src={livro.imagemCapa}
+                    alt={`Capa do livro ${livro.titulo} escrito por ${livro.autor}`}
+                  />
+                </li>
+              )
+            })}
+          </ul>
         </div>
+      ) : (
+        <Loader />
+      )}
+      {livroSelecionado && (
         <AbCard>
-            <div className="selecionado-detalhes">
-                <header>
-                    <h5>Sobre o livro:</h5>
-                </header>
-                <h6>{selecionado.nome}</h6>
-                <p>{selecionado.descricao}</p>
-                <p>Por: {selecionado.autor}</p>
-                <footer>
-                    <div className="preco">
-                        <em>A partir de:</em>
-                        <strong>{Intl.NumberFormat('pt-br', {style: 'currency', currency: 'BRL'}).format(selecionado.preco)}</strong>
-                    </div>
-                    <div>
-                        <AbBotao texto="Comprar" />
-                    </div>
-                </footer>
-            </div>
+          <div className='selecionado-detalhes'>
+            <header>
+              <h5>Sobre o livro:</h5>
+            </header>
+            <h6>{livroSelecionado.titulo}</h6>
+            <p>{livroSelecionado.descricao}</p>
+            <p>Por: {livroSelecionado.autor}</p>
+            <footer>
+              <div className='preco'>
+                <em>A partir de:</em>
+                <strong>
+                  {currencyFormat(
+                    livroSelecionado.opcoesCompra.reduce((prevOpc, opc) =>
+                      opc.preco < prevOpc.preco ? opc : prevOpc
+                    ).preco
+                  )}
+                </strong>
+              </div>
+              <div>
+                <AbBotao texto='Comprar' />
+              </div>
+            </footer>
+          </div>
         </AbCard>
-    </section>)
-
+      )}
+    </section>
+  )
 }
 
 export default LivrosDestaque

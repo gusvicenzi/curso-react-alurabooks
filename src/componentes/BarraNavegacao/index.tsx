@@ -7,16 +7,15 @@ import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
 import { useEffect, useState } from 'react'
 import { useClearToken, useGetToken } from '../../hooks/session'
-import { ICategoria } from '../../interfaces/ICategoria'
-import { httpBackend } from '../../http'
+import { getCategorias } from '../../http'
+import { useQuery } from '@tanstack/react-query'
+import { Loader } from '../Loader'
 
 const BarraNavegacao = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
   const [isSignInModalOpened, setSignInIsModalOpened] = useState(false)
   const [isSignUpModalOpened, setSignUpIsModalOpened] = useState(false)
-
-  const [categorias, setCategorias] = useState<ICategoria[]>([])
 
   const navigate = useNavigate()
   const token = useGetToken()
@@ -32,14 +31,10 @@ const BarraNavegacao = () => {
     navigate('/')
   }
 
-  const getCategorias = async () => {
-    const { data } = await httpBackend.get<ICategoria[]>('categorias')
-    setCategorias(data)
-  }
-
-  useEffect(() => {
-    if (!categorias.length) getCategorias()
-  }, [categorias])
+  const { data: categorias, isLoading } = useQuery({
+    queryKey: ['categorias'],
+    queryFn: getCategorias
+  })
 
   const LoggedInActions = (
     <>
@@ -101,11 +96,12 @@ const BarraNavegacao = () => {
         <li>
           <a href='#!'>Categorias</a>
           <ul className='submenu'>
-            {categorias.map(({ id, nome, slug }) => (
+            {categorias?.map(({ id, nome, slug }) => (
               <li key={`cat-${id}`}>
                 <Link to={`/categorias/${slug}`}>{nome}</Link>
               </li>
             ))}
+            {!categorias && isLoading && <Loader color='#002f52' />}
           </ul>
         </li>
       </ul>

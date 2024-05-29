@@ -1,32 +1,19 @@
-import { useEffect, useState } from 'react'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
-import { ICategoria } from '../../interfaces/ICategoria'
-import { httpBackend } from '../../http'
+import { getCategoria } from '../../http'
 import { useParams } from 'react-router-dom'
 import { Loader } from '../../componentes/Loader'
+import { useQuery } from '@tanstack/react-query'
 
 export const Categoria = () => {
-  const [categoria, setCategoria] = useState<ICategoria>()
-  const [isLoading, setIsLoading] = useState(true)
-
   const params = useParams()
 
-  const getCategoria = async (slug: string) => {
-    setIsLoading(true)
-    try {
-      const { data } = await httpBackend.get<ICategoria[]>('/categorias', {
-        params: { slug }
-      })
-      setCategoria(data[0])
-    } catch (error) {
-      console.log(error)
+  const { data: categoria, isLoading } = useQuery({
+    queryKey: ['categoriaPorSlug', params.slug],
+    queryFn: () => {
+      if (params.slug) return getCategoria(params.slug)
+      throw new Error('No slug')
     }
-    setIsLoading(false)
-  }
-
-  useEffect(() => {
-    if (params?.slug) getCategoria(params.slug)
-  }, [params.slug])
+  })
 
   if (isLoading) return <Loader />
 

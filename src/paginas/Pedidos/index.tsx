@@ -4,6 +4,7 @@ import { AbBotao } from 'ds-alurabooks'
 import { useGetToken } from '../../hooks/session'
 import { IPedido } from '../../interfaces/IPedido'
 import { httpBackend } from '../../http'
+import { currencyFormat } from '../../utils/currencyFormat'
 
 export const Pedidos = () => {
   const [pedidos, setPedidos] = useState<IPedido[]>([])
@@ -49,13 +50,7 @@ export const Pedidos = () => {
               <strong>{new Date(data).toLocaleDateString()}</strong>
             </li>
             <li>
-              Valor total:{' '}
-              <strong>
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL'
-                }).format(total)}
-              </strong>
+              Valor total: <strong>{currencyFormat(total)}</strong>
             </li>
             <li>
               Entrega realizada em:{' '}

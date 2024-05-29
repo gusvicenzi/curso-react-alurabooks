@@ -1,6 +1,8 @@
 import axios, { AxiosError } from 'axios'
 import { useGetToken } from '../hooks/session'
 import { history } from '../App'
+import { ICategoria } from '../interfaces/ICategoria'
+import { ILivro } from '../interfaces/ILivro'
 
 export const httpBackend = axios.create({
   baseURL: 'http://localhost:8000',
@@ -34,3 +36,27 @@ httpBackend.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+export const getCategorias = async () => {
+  const { data } = await httpBackend.get<ICategoria[]>('categorias')
+  return data
+}
+
+export const getCategoria = async (slug: string) => {
+  try {
+    const { data } = await httpBackend.get<ICategoria[]>('/categorias', {
+      params: { slug }
+    })
+    return data[0]
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
+export const getLivrosDestaque = async (
+  list: 'lancamentos' | 'mais-vendidos'
+) => {
+  const { data } = await httpBackend.get<ILivro[]>(`public/${list}`)
+  return data
+}
