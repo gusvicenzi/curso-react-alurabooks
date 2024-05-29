@@ -7,12 +7,16 @@ import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
 import { useEffect, useState } from 'react'
 import { useClearToken, useGetToken } from '../../hooks/session'
+import { ICategoria } from '../../interfaces/ICategoria'
+import { httpBackend } from '../../http'
 
 const BarraNavegacao = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
   const [isSignInModalOpened, setSignInIsModalOpened] = useState(false)
   const [isSignUpModalOpened, setSignUpIsModalOpened] = useState(false)
+
+  const [categorias, setCategorias] = useState<ICategoria[]>([])
 
   const navigate = useNavigate()
   const token = useGetToken()
@@ -27,6 +31,15 @@ const BarraNavegacao = () => {
     clearToken()
     navigate('/')
   }
+
+  const getCategorias = async () => {
+    const { data } = await httpBackend.get<ICategoria[]>('categorias')
+    setCategorias(data)
+  }
+
+  useEffect(() => {
+    if (!categorias.length) getCategorias()
+  }, [])
 
   const LoggedInActions = (
     <>
@@ -88,21 +101,11 @@ const BarraNavegacao = () => {
         <li>
           <a href='#!'>Categorias</a>
           <ul className='submenu'>
-            <li>
-              <Link to='/'>Frontend</Link>
-            </li>
-            <li>
-              <Link to='/'>Programação</Link>
-            </li>
-            <li>
-              <Link to='/'>Infraestrutura</Link>
-            </li>
-            <li>
-              <Link to='/'>Business</Link>
-            </li>
-            <li>
-              <Link to='/'>Design e UX</Link>
-            </li>
+            {categorias.map(({ id, nome, slug }) => (
+              <li key={`cat-${id}`}>
+                <Link to={`/categorias/${slug}`}>{nome}</Link>
+              </li>
+            ))}
           </ul>
         </li>
       </ul>
