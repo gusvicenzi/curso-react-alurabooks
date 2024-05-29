@@ -5,6 +5,7 @@ import { ILivro } from '../../interfaces/ILivro'
 import './LivrosDestaque.css'
 import { currencyFormat } from '../../utils/currencyFormat'
 import { Loader } from '../Loader'
+import { minPriceLivro } from '../../utils/minPriceLivro'
 
 interface LivrosDestaqueProps {
   livros: ILivro[]
@@ -57,11 +58,7 @@ const LivrosDestaque = ({ livros }: LivrosDestaqueProps) => {
               <div className='preco'>
                 <em>A partir de:</em>
                 <strong>
-                  {currencyFormat(
-                    livroSelecionado.opcoesCompra.reduce((prevOpc, opc) =>
-                      opc.preco < prevOpc.preco ? opc : prevOpc
-                    ).preco
-                  )}
+                  {currencyFormat(minPriceLivro(livroSelecionado.opcoesCompra))}
                 </strong>
               </div>
               <div>
