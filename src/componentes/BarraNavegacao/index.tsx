@@ -39,7 +39,7 @@ const BarraNavegacao = () => {
 
   useEffect(() => {
     if (!categorias.length) getCategorias()
-  }, [])
+  }, [categorias])
 
   const LoggedInActions = (
     <>
