@@ -2,7 +2,12 @@ import { useParams } from 'react-router-dom'
 import { Loader } from '../../componentes/Loader'
 import { useQuery } from '@tanstack/react-query'
 import { getLivro } from '../../http'
-import { AbBotao, AbGrupoOpcoes, AbInputQuantidade } from 'ds-alurabooks'
+import {
+  AbBotao,
+  AbGrupoOpcoes,
+  AbInputQuantidade,
+  AbGrupoOpcao
+} from 'ds-alurabooks'
 import { currencyFormat } from '../../utils/currencyFormat'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
 import './Livro.css'
@@ -20,6 +25,14 @@ export const Livro = () => {
 
   if (isLoading && !livro) return <Loader />
 
+  const opcoes: AbGrupoOpcao[] = livro
+    ? livro?.opcoesCompra.map(opt => ({
+        ...opt,
+        corpo: currencyFormat(opt.preco),
+        rodape: opt.formatos?.toString() || ''
+      }))
+    : []
+
   return (
     <>
       {livro && (
@@ -36,13 +49,7 @@ export const Livro = () => {
                 <p>Por: {livro.autor}</p>
                 <h3>Selecione o formato do seu livro:</h3>
                 <div className='opcoes'>
-                  <AbGrupoOpcoes
-                    opcoes={livro.opcoesCompra.map(opt => ({
-                      ...opt,
-                      corpo: currencyFormat(opt.preco),
-                      rodape: opt.formatos?.toString() || ''
-                    }))}
-                  />
+                  <AbGrupoOpcoes valorPadrao={opcoes[0]} opcoes={opcoes} />
                 </div>
                 <p>
                   <strong>
