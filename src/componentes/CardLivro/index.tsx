@@ -18,7 +18,7 @@ export const CardLivro = ({ livro }: { livro: ILivro }) => {
           <strong>{currencyFormat(minPriceLivro(livro.opcoesCompra))}</strong>
         </li>
         <li className='link-container'>
-          <Link to={`/livro/${livro.slug}`}>
+          <Link to={`/livros/${livro.slug}`}>
             <AbBotao texto='Comprar' />
           </Link>
         </li>

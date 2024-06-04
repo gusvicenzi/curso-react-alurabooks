@@ -72,3 +72,15 @@ export const getLivrosPorCategoria = async (categoria: ICategoria) => {
     throw error
   }
 }
+
+export const getLivro = async (slug: string) => {
+  try {
+    const { data } = await httpBackend.get<ILivro[]>('/livros', {
+      params: { slug }
+    })
+    return data[0]
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
