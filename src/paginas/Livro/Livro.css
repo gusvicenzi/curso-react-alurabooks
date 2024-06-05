@@ -1,87 +1,54 @@
-.livro {
+.livro-info {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  align-items: center;
 }
 
-.livro .container {
+.livro-info .container {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
-.livro .container .detalhes {
+.livro-info .container .detalhes {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   flex-grow: 1;
   padding-right: 24px;
 }
-.livro .container .detalhes {
+
+.livro-info .container .detalhes {
   flex-grow: 1;
   padding-right: 24px;
 }
-.livro .container .detalhes h2 {
+.livro-info .container .detalhes h2 {
   font-size: 24px;
   color: #002f52;
 }
-.livro .container .detalhes h3 {
+.livro-info .container .detalhes h3 {
   font-size: 16px;
   color: #002f52;
 }
-.livro .container .detalhes p {
+.livro-info .container .detalhes p {
   font-size: 14px;
   color: rgba(0, 0, 0, 0.85);
 }
-.livro .container .detalhes p strong {
+.livro-info .container .detalhes p strong {
   font-weight: 700;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.54);
 }
-.livro .container .detalhes .opcoes {
+.livro-info .container .detalhes .opcoes {
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
 }
 
-.livro .qtdContainer {
+.livro-info .container .detalhes > footer {
+  display: flex;
+  align-items: center;
+}
+
+.livro-info .qtdContainer {
   margin: 32px 0;
 }
-
-/* .livro {
-  display: flex;
-}
-
-.livro .container .detalhes {
-  flex-grow: 1;
-  padding-right: 24px;
-}
-.livro .container .detalhes {
-  flex-grow: 1;
-  padding-right: 24px;
-}
-.livro .container .detalhes h2 {
-  font-size: 24px;
-  color: #002f52;
-}
-.livro .container .detalhes h3 {
-  font-size: 16px;
-  color: #002f52;
-}
-.livro .container .detalhes p {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.85);
-}
-.livro .container .detalhes p strong {
-  font-weight: 700;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.54);
-}
-.livro .container .detalhes .opcoes {
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-
-.livro .qtdContainer {
-  margin: 32px 0;
-} */

@@ -11,9 +11,12 @@ import {
 import { currencyFormat } from '../../utils/currencyFormat'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
 import './Livro.css'
+import { useState } from 'react'
 
 export const Livro = () => {
   const params = useParams()
+
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
 
   const { data: livro, isLoading } = useQuery({
     queryKey: ['livroPorSlug', params.slug],
@@ -36,7 +39,7 @@ export const Livro = () => {
   return (
     <>
       {livro && (
-        <section className='livro'>
+        <section className='livro-info'>
           <TituloPrincipal texto='Detalhes do Livro' />
           <div>
             <div className='container'>
@@ -49,7 +52,11 @@ export const Livro = () => {
                 <p>Por: {livro.autor}</p>
                 <h3>Selecione o formato do seu livro:</h3>
                 <div className='opcoes'>
-                  <AbGrupoOpcoes valorPadrao={opcoes[0]} opcoes={opcoes} />
+                  <AbGrupoOpcoes
+                    valorPadrao={opcoes[0]}
+                    opcoes={opcoes}
+                    onChange={setOpcaoSelecionada}
+                  />
                 </div>
                 <p>
                   <strong>
