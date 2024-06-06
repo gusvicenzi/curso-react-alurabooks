@@ -12,21 +12,39 @@ import { currencyFormat } from '../../utils/currencyFormat'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
 import './Livro.css'
 import { useState } from 'react'
+import { ILivro } from '../../interfaces/ILivro'
+import { AxiosError } from 'axios'
+import { SobreAutor } from '../../componentes/SobreAutor'
+import { BlocoSobre } from '../../componentes/BlocoSobre'
 
 export const Livro = () => {
   const params = useParams()
 
   const [opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
 
-  const { data: livro, isLoading } = useQuery({
+  const {
+    data: livro,
+    isLoading,
+    error
+  } = useQuery<ILivro | null, AxiosError>({
     queryKey: ['livroPorSlug', params.slug],
     queryFn: () => {
       if (params.slug) return getLivro(params.slug)
       throw new Error('Nenhum slug')
-    }
+    },
+    retry: 2
   })
 
   if (isLoading && !livro) return <Loader />
+
+  if (error) {
+    console.log(error.message)
+    return <h1>Ops! Algum erro inesperado aconteceu</h1>
+  }
+
+  if (livro === null) {
+    return <h1>Livro não encontrado!</h1>
+  }
 
   const opcoes: AbGrupoOpcao[] = livro
     ? livro?.opcoesCompra.map(opt => ({
@@ -73,10 +91,10 @@ export const Livro = () => {
                 </footer>
               </div>
             </div>
-            {/* <div>
+            <div>
               {livro && <SobreAutor autorId={livro.autor} />}
               <BlocoSobre titulo='Sobre o Livro' corpo={livro?.sobre} />
-            </div> */}
+            </div>
           </div>
         </section>
       )}

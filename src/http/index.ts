@@ -3,6 +3,7 @@ import { useGetToken } from '../hooks/session'
 import { history } from '../App'
 import { ICategoria } from '../interfaces/ICategoria'
 import { ILivro } from '../interfaces/ILivro'
+import { IAutor } from '../interfaces/IAutor'
 
 export const httpBackend = axios.create({
   baseURL: 'http://localhost:8000',
@@ -73,11 +74,24 @@ export const getLivrosPorCategoria = async (categoria: ICategoria) => {
   }
 }
 
+export const getAutor = async (id: number) => {
+  try {
+    const { data } = await httpBackend.get<IAutor>(`/autores/${id}`)
+    return data
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
+}
+
 export const getLivro = async (slug: string) => {
   try {
     const { data } = await httpBackend.get<ILivro[]>('/livros', {
       params: { slug }
     })
+
+    if (data.length === 0) return null
+
     return data[0]
   } catch (error) {
     console.log(error)
