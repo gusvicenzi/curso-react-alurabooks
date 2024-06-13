@@ -7,9 +7,21 @@ import usuario from './assets/usuario.svg'
 import './BarraNavegacao.css'
 import { useEffect, useState } from 'react'
 import { useClearToken, useGetToken } from '../../hooks/session'
-import { getCategorias } from '../../http'
-import { useQuery } from '@tanstack/react-query'
+// import { getCategorias } from '../../http'
+// import { useQuery } from '@tanstack/react-query'
 import { Loader } from '../Loader'
+import { gql, useQuery } from '@apollo/client'
+import { ICategoria } from '../../interfaces/ICategoria'
+
+const GET_CATEGORIAS = gql`
+  query GetCategorias {
+    categorias {
+      id
+      slug
+      nome
+    }
+  }
+`
 
 const BarraNavegacao = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
@@ -21,6 +33,10 @@ const BarraNavegacao = () => {
   const token = useGetToken()
   const clearToken = useClearToken
 
+  const { data, loading: isLoading } = useQuery<{
+    categorias: ICategoria[]
+  }>(GET_CATEGORIAS)
+
   useEffect(() => {
     setIsUserLoggedIn(!!token)
   }, [token])
@@ -31,10 +47,11 @@ const BarraNavegacao = () => {
     navigate('/')
   }
 
-  const { data: categorias, isLoading } = useQuery({
-    queryKey: ['categorias'],
-    queryFn: getCategorias
-  })
+  // const { data: categorias, isLoading } = useQuery({
+  //   queryKey: ['categorias'],
+  //   queryFn: getCategorias
+  // })
+  const categorias = data?.categorias
 
   const LoggedInActions = (
     <>
