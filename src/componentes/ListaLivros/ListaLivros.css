@@ -6,3 +6,13 @@
   margin: 1rem auto;
   max-width: 85%;
 }
+
+.form-busca-livro {
+  margin: 0 auto;
+  max-width: 80%;
+  text-align: center;
+}
+
+.form-busca-livro div {
+  margin-top: 1rem;
+}
