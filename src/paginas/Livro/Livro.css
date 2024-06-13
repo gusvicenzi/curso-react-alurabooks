@@ -52,3 +52,9 @@
 .livro-info .qtdContainer {
   margin: 32px 0;
 }
+
+.livro-info .tags {
+  display: flex;
+  gap: 12px;
+  padding: 1rem;
+}

@@ -10,6 +10,10 @@ const GET_LIVRO = gql`
       titulo
       descricao
       sobre
+      tags {
+        nome
+        id
+      }
       autor {
         id
         nome

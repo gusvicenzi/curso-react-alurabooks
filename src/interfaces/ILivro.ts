@@ -1,5 +1,6 @@
 import { IAutor } from './IAutor'
 import { IOpcaoCompra } from './IOpcaoCompra'
+import { ITag } from './ITag'
 
 export interface ILivro {
   id: number
@@ -15,4 +16,5 @@ export interface ILivro {
   autorId: number
   opcoesCompra: IOpcaoCompra[]
   sobre: string
+  tags: ITag[]
 }

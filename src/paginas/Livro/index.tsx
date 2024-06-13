@@ -4,19 +4,20 @@ import {
   AbBotao,
   AbGrupoOpcoes,
   AbInputQuantidade,
-  AbGrupoOpcao
+  AbGrupoOpcao,
+  AbTag
 } from 'ds-alurabooks'
 import { currencyFormat } from '../../utils/currencyFormat'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
 import './Livro.css'
 import { useState } from 'react'
-import { SobreAutor } from '../../componentes/SobreAutor'
 import { BlocoSobre } from '../../componentes/BlocoSobre'
 import { useLivro } from '../../hooks/graphql/livro/hooks'
 
 export const Livro = () => {
   const params = useParams()
 
+  const [quantidade, setQuantidade] = useState<number>(1)
   const [_opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
 
   const { data, loading: isLoading, error } = useLivro(params.slug ?? '')
@@ -71,7 +72,10 @@ export const Livro = () => {
                 </p>
                 <footer>
                   <div className='qtdContainer'>
-                    <AbInputQuantidade />
+                    <AbInputQuantidade
+                      value={quantidade}
+                      onChange={setQuantidade}
+                    />
                   </div>
                   <div>
                     <AbBotao texto='Comprar' />
@@ -80,8 +84,13 @@ export const Livro = () => {
               </div>
             </div>
             <div>
-              <SobreAutor autor={livro.autor} />
+              <BlocoSobre titulo='Sobre o Autor' corpo={livro.autor.sobre} />
               <BlocoSobre titulo='Sobre o Livro' corpo={livro.sobre} />
+            </div>
+            <div className='tags'>
+              {data.livro.tags?.map(tag => (
+                <AbTag contexto='secundario' texto={tag.nome} key={tag.id} />
+              ))}
             </div>
           </div>
         </section>
