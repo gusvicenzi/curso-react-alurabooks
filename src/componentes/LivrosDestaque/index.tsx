@@ -53,7 +53,7 @@ const LivrosDestaque = ({ livros }: LivrosDestaqueProps) => {
             </header>
             <h6>{livroSelecionado.titulo}</h6>
             <p>{livroSelecionado.descricao}</p>
-            <p>Por: {livroSelecionado.autor}</p>
+            <p>Por: {livroSelecionado.autor.nome}</p>
             <footer>
               <div className='preco'>
                 <em>A partir de:</em>

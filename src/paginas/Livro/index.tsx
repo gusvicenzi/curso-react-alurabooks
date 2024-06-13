@@ -1,7 +1,5 @@
 import { useParams } from 'react-router-dom'
 import { Loader } from '../../componentes/Loader'
-import { useQuery } from '@tanstack/react-query'
-import { getLivro } from '../../http'
 import {
   AbBotao,
   AbGrupoOpcoes,
@@ -12,28 +10,18 @@ import { currencyFormat } from '../../utils/currencyFormat'
 import { TituloPrincipal } from '../../componentes/TituloPrincipal'
 import './Livro.css'
 import { useState } from 'react'
-import { ILivro } from '../../interfaces/ILivro'
-import { AxiosError } from 'axios'
 import { SobreAutor } from '../../componentes/SobreAutor'
 import { BlocoSobre } from '../../componentes/BlocoSobre'
+import { useLivro } from '../../hooks/graphql/livro/hooks'
 
 export const Livro = () => {
   const params = useParams()
 
-  const [opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
+  const [_opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
 
-  const {
-    data: livro,
-    isLoading,
-    error
-  } = useQuery<ILivro | null, AxiosError>({
-    queryKey: ['livroPorSlug', params.slug],
-    queryFn: () => {
-      if (params.slug) return getLivro(params.slug)
-      throw new Error('Nenhum slug')
-    },
-    retry: 2
-  })
+  const { data, loading: isLoading, error } = useLivro(params.slug ?? '')
+
+  const livro = data?.livro
 
   if (isLoading && !livro) return <Loader />
 
@@ -67,7 +55,7 @@ export const Livro = () => {
               <div className='detalhes'>
                 <h2>{livro.titulo}</h2>
                 <p>{livro.descricao}</p>
-                <p>Por: {livro.autor}</p>
+                <p>Por: {livro.autor.nome}</p>
                 <h3>Selecione o formato do seu livro:</h3>
                 <div className='opcoes'>
                   <AbGrupoOpcoes
@@ -92,8 +80,8 @@ export const Livro = () => {
               </div>
             </div>
             <div>
-              {livro && <SobreAutor autorId={livro.autor} />}
-              <BlocoSobre titulo='Sobre o Livro' corpo={livro?.sobre} />
+              <SobreAutor autor={livro.autor} />
+              <BlocoSobre titulo='Sobre o Livro' corpo={livro.sobre} />
             </div>
           </div>
         </section>

@@ -21,6 +21,10 @@ const GET_DESTAQUES = gql`
         slug
         descricao
         imagemCapa
+        autor {
+          id
+          nome
+        }
         opcoesCompra {
           id
           preco
@@ -32,6 +36,10 @@ const GET_DESTAQUES = gql`
         slug
         descricao
         imagemCapa
+        autor {
+          id
+          nome
+        }
         opcoesCompra {
           id
           preco

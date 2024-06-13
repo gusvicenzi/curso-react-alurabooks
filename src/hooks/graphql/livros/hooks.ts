@@ -3,7 +3,7 @@ import { ILivro } from '../../../interfaces/ILivro'
 import { filtroLivrosVar, livrosVar } from './state'
 
 const GET_LIVROS = gql`
-  query GetLivroPorCategoria($categoriaId: Int, $titulo: String) {
+  query GetLivros($categoriaId: Int, $titulo: String) {
     livros(categoriaId: $categoriaId, titulo: $titulo) {
       id
       slug
