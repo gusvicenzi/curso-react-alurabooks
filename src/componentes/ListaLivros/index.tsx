@@ -1,79 +1,51 @@
 import './ListaLivros.css'
-// import { useQuery } from '@tanstack/react-query'
 import { ICategoria } from '../../interfaces/ICategoria'
 import { CardLivro } from '../CardLivro'
 import { Loader } from '../Loader'
-import { gql, useQuery } from '@apollo/client'
-import { ILivro } from '../../interfaces/ILivro'
-import { AbBotao, AbCampoTexto } from 'ds-alurabooks'
-import { FormEvent, useState } from 'react'
+import { AbCampoTexto } from 'ds-alurabooks'
+import { useEffect, useState } from 'react'
+import { useLivros } from '../../hooks/graphql/livros/hooks'
+import { useReactiveVar } from '@apollo/client'
+import { filtroLivrosVar, livrosVar } from '../../hooks/graphql/livros/state'
 
 interface ListaLivrosProps {
   categoria: ICategoria
 }
 
-const GET_LIVROS = gql`
-  query GetLivro($categoriaId: Int, $titulo: String) {
-    livros(categoriaId: $categoriaId, titulo: $titulo) {
-      id
-      slug
-      imagemCapa
-      titulo
-      descricao
-      opcoesCompra {
-        id
-        preco
-      }
-    }
-  }
-`
-
 export const ListaLivros = ({ categoria }: ListaLivrosProps) => {
-  // const { data: livrosDaCategoria, isLoading: isLoadingLivrosDaCategoria } =
-  //   useQuery({
-  //     queryKey: ['livrosCategoria', categoria],
-  //     queryFn: () => {
-  //       if (categoria) return getLivrosPorCategoria(categoria)
-  //       throw new Error('Nenhuma categoria')
-  //     }
-  //   })
   const [textoParaBusca, setTextoParaBusca] = useState('')
 
-  const {
-    data,
-    loading: isLoadingLivrosDaCategoria,
-    refetch
-  } = useQuery<{
-    livros: ILivro[]
-  }>(GET_LIVROS, { variables: { categoriaId: categoria.id } })
+  useEffect(() => {
+    filtroLivrosVar({
+      ...filtroLivrosVar(),
+      titulo: textoParaBusca.length >= 3 ? textoParaBusca : ''
+    })
+  }, [textoParaBusca])
 
-  const livrosDaCategoria = data?.livros
+  filtroLivrosVar({
+    ...filtroLivrosVar(),
+    categoria
+  })
 
-  if (!livrosDaCategoria?.length && isLoadingLivrosDaCategoria)
-    return <Loader />
+  const livros = useReactiveVar(livrosVar)
 
-  const buscarLivros = (ev: FormEvent) => {
-    ev.preventDefault()
-
-    if (textoParaBusca) {
-      refetch({ categoriaId: categoria.id, titulo: textoParaBusca })
-    }
-  }
+  const { loading: isLoadingLivrosDaCategoria } = useLivros()
 
   return (
     <section>
-      <form onSubmit={buscarLivros} className='form-busca-livro'>
+      <form className='form-busca-livro'>
         <AbCampoTexto
           value={textoParaBusca}
           onChange={setTextoParaBusca}
           placeholder='Digite o título'
         />
-        <div>
-          <AbBotao texto='Buscar' />
-        </div>
       </form>
+      {isLoadingLivrosDaCategoria && <Loader />}
+      {!livros?.length && !isLoadingLivrosDaCategoria && (
+        <h1>Nenhum livro encontrado</h1>
+      )}
       <div className='lista-livros'>
-        {livrosDaCategoria?.map(livro => (
+        {livros?.map(livro => (
           <CardLivro key={`cardLivro-${livro.id}`} livro={livro} />
         ))}
       </div>

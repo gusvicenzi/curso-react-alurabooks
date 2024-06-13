@@ -7,21 +7,59 @@ import TagsCategorias from '../../componentes/TagsCategorias'
 import Titulo from '../../componentes/Titulo'
 
 import './Home.css'
-import { useQuery } from '@tanstack/react-query'
-import { getLivrosDestaque } from '../../http'
+import { gql, useQuery } from '@apollo/client'
+import { ILivro } from '../../interfaces/ILivro'
+// import { useQuery } from '@tanstack/react-query'
+// import { getLivrosDestaque } from '../../http'
+
+const GET_DESTAQUES = gql`
+  query GetDestaques {
+    destaques {
+      lancamentos {
+        id
+        titulo
+        slug
+        descricao
+        imagemCapa
+        opcoesCompra {
+          id
+          preco
+        }
+      }
+      maisVendidos {
+        id
+        titulo
+        slug
+        descricao
+        imagemCapa
+        opcoesCompra {
+          id
+          preco
+        }
+      }
+    }
+  }
+`
 
 const Home = () => {
   const [busca, setBusca] = useState('')
 
-  const { data: lancamentos } = useQuery({
-    queryKey: ['lancamentos'],
-    queryFn: () => getLivrosDestaque('lancamentos')
-  })
+  // const { data: lancamentos } = useQuery({
+  //   queryKey: ['lancamentos'],
+  //   queryFn: () => getLivrosDestaque('lancamentos')
+  // })
 
-  const { data: maisVendidos } = useQuery({
-    queryKey: ['maisVendidos'],
-    queryFn: () => getLivrosDestaque('mais-vendidos')
-  })
+  // const { data: maisVendidos } = useQuery({
+  //   queryKey: ['maisVendidos'],
+  //   queryFn: () => getLivrosDestaque('mais-vendidos')
+  // })
+
+  const { data } = useQuery<{
+    destaques: {
+      lancamentos: ILivro[]
+      maisVendidos: ILivro[]
+    }
+  }>(GET_DESTAQUES)
 
   return (
     <section className='home'>
@@ -39,9 +77,9 @@ const Home = () => {
         </form>
       </Banner>
       <Titulo texto='ÚLTIMOS LANÇAMENTOS' />
-      <LivrosDestaque livros={lancamentos ?? []} />
+      <LivrosDestaque livros={data?.destaques.lancamentos ?? []} />
       <Titulo texto='MAIS VENDIDOS' />
-      <LivrosDestaque livros={maisVendidos ?? []} />
+      <LivrosDestaque livros={data?.destaques.maisVendidos ?? []} />
       <TagsCategorias />
       <Newsletter />
     </section>
