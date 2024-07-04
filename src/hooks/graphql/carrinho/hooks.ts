@@ -9,6 +9,7 @@ const GET_CARRINHO = gql`
           id
           slug
           titulo
+          imagemCapa
           autor {
             nome
           }
@@ -21,10 +22,6 @@ const GET_CARRINHO = gql`
     }
   }
 `
-// export const useCarrinho = (slug: string) => {
-//   return useQuery<{
-//     livro: ILivro
-//   }>(GET_LIVRO, {
-//     variables: { slug }
-//   })
-// }
+export const useCarrinho = () => {
+  return useQuery(GET_CARRINHO)
+}
