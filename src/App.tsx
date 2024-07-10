@@ -4,6 +4,7 @@ import Rotas from './rotas'
 import { createBrowserHistory } from 'history'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ABApolloClient } from './componentes/ABApolloClient'
+import { CarrinhoProvider } from './context/carrinho'
 
 export const history = createBrowserHistory({ window })
 
@@ -12,9 +13,11 @@ function App() {
   return (
     <HistoryRouter history={history}>
       <ABApolloClient>
-        <QueryClientProvider client={queryClient}>
-          <Rotas />
-        </QueryClientProvider>
+        <CarrinhoProvider>
+          <QueryClientProvider client={queryClient}>
+            <Rotas />
+          </QueryClientProvider>
+        </CarrinhoProvider>
       </ABApolloClient>
     </HistoryRouter>
   )

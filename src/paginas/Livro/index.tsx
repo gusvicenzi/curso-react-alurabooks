@@ -13,12 +13,14 @@ import './Livro.css'
 import { useState } from 'react'
 import { BlocoSobre } from '../../componentes/BlocoSobre'
 import { useLivro } from '../../hooks/graphql/livro/hooks'
+import { useCarrinhoContext } from '../../context/carrinho'
 
 export const Livro = () => {
   const params = useParams()
+  const { adicionarItemCarrinho } = useCarrinhoContext()
 
   const [quantidade, setQuantidade] = useState<number>(1)
-  const [_opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
+  const [opcaoSelecionada, setOpcaoSelecionada] = useState<AbGrupoOpcao>()
 
   const { data, loading: isLoading, error } = useLivro(params.slug ?? '')
 
@@ -43,6 +45,26 @@ export const Livro = () => {
       }))
     : []
 
+  const handleAdicionarItemAoCarrinho = () => {
+    if (!livro) return
+
+    const opcaoCompra = livro.opcoesCompra.find(
+      op => op.id === opcaoSelecionada?.id
+    )
+
+    if (!opcaoCompra) {
+      alert('Por favor selecione opção de compra')
+
+      return
+    }
+
+    adicionarItemCarrinho({
+      livro,
+      opcaoCompra,
+      quantidade
+    })
+  }
+
   return (
     <>
       {livro && (
@@ -60,7 +82,7 @@ export const Livro = () => {
                 <h3>Selecione o formato do seu livro:</h3>
                 <div className='opcoes'>
                   <AbGrupoOpcoes
-                    valorPadrao={opcoes[0]}
+                    // valorPadrao={opcoes[0]}
                     opcoes={opcoes}
                     onChange={setOpcaoSelecionada}
                   />
@@ -78,7 +100,10 @@ export const Livro = () => {
                     />
                   </div>
                   <div>
-                    <AbBotao texto='Comprar' />
+                    <AbBotao
+                      texto='Comprar'
+                      onClick={() => handleAdicionarItemAoCarrinho()}
+                    />
                   </div>
                 </footer>
               </div>

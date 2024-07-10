@@ -4,6 +4,7 @@ import ModalCadastroUsuario from '../ModalCadastroUsuario'
 import ModalLoginUsuario from '../ModalLoginUsuario'
 import logo from './assets/logo.png'
 import usuario from './assets/usuario.svg'
+import sacola from './assets/sacola.png'
 import './BarraNavegacao.css'
 import { useEffect, useState } from 'react'
 import { useClearToken, useGetToken } from '../../hooks/session'
@@ -97,6 +98,14 @@ const BarraNavegacao = () => {
         <ModalCadastroUsuario
           isOpen={isSignUpModalOpened}
           onClose={() => setSignUpIsModalOpened(false)}
+        />
+      </li>
+      <li>
+        <BotaoNavegacao
+          texto='Carrinho'
+          textoAltSrc='Icone representando um carrinho de compras'
+          imagemSrc={sacola}
+          onClick={() => navigate('/carrinho')}
         />
       </li>
     </>
